@@ -4,4 +4,8 @@ angular.module('pvta.controllers').controller('VehicleController', function($sco
     LatLong.push(lat, long);
     $location.path('/app/map')
   }
+  
+  $scope.firstTest = function(){
+    $scope.vehicles = 1;
+  }
 });
