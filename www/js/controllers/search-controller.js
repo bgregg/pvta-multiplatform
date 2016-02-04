@@ -1,6 +1,11 @@
-angular.module('pvta.controllers').controller('SearchController', function($scope, $ionicFilterBar, $resource, RouteList, StopList, Stops){
+angular.module('pvta.controllers').controller('SearchController', function($scope, $ionicFilterBar, $resource, RouteList, StopList, Stops, Vehicles){
   var filterBarInstance;
   function getItems () {
+    
+    var vehicles = Vehicles.query(function(){
+      console.log(JSON.stringify(vehicles));
+    });
+    
     $scope.all = [];
     var prepareRoutes = function(routes){
       for(var i = 0; i < routes.length; i++){

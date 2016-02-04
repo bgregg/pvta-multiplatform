@@ -4,6 +4,10 @@ angular.module('pvta.services', ['ngResource'])
     return $resource('http://bustracker.pvta.com/infopoint/rest/vehicles/get/:vehicleId');
 })
 
+.factory('Vehicles', function ($resource) {
+    return $resource('http://bustracker.pvta.com/infopoint/rest/vehicles/getallvehicles');
+})
+
 .factory('Route', function ($resource) {
     return $resource('http://bustracker.pvta.com/infopoint/rest/routedetails/get/:routeId');
 })
@@ -217,7 +221,7 @@ angular.module('pvta.services', ['ngResource'])
   var latlong = [];
   return {
     push: function(lat, long){
-      var p = {lat, long};
+      var p = {lat: lat, long: long};
       latlong.push(p);
     },
     pop: function(){
