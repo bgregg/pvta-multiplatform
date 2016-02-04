@@ -1,4 +1,5 @@
 platforms/android/*
 platforms/ios/*
 bower_components
+node_modules
 .idea
