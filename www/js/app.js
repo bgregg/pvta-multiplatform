@@ -6,6 +6,8 @@
 // 'pvta.controllers' is found in controllers.js
 angular.module('pvta.controllers', ['pvta.services']);
 
+// Instantiate the app's base module, called 'pvta.'  
+// The global list of dependencies is included.
 angular.module('pvta', ['ionic', 'ngCordova', 'pvta.controllers', 'angularMoment', 'jett.ionic.filter.bar', 'underscore'])
 
 .run(function($ionicPlatform) {
@@ -30,8 +32,12 @@ angular.module('pvta', ['ionic', 'ngCordova', 'pvta.controllers', 'angularMoment
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicFilterBarConfigProvider) {
+  
+  // Instantiate all states, which in essence
+  // are the app's different pages
   $stateProvider
   
+
   .state('app', {
     url: '/app',
     abstract: true,
