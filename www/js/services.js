@@ -5,15 +5,18 @@ angular.module('pvta.services', ['ngResource'])
 })
 
 .factory('Vehicle', function ($resource, Avail) {
-    return $resource(Avail + '/vehicles/get/:vehicleId');
+   // return $resource(Avail + '/vehicles/get/:vehicleId');
+  return $resource('../dev/vehicles/:vehicleId.json');
 })
 
 .factory('Route', function ($resource, Avail) {
-    return $resource(Avail + '/routedetails/get/:routeId');
+    //return $resource(Avail + '/routedetails/get/:routeId');
+  return $resource('../dev/routedetails/:routeId.json');
 })
 
 .factory('Routes', function ($resource, Avail) {
-    return $resource(Avail + '/routes/getvisibleroutes');
+    //return $resource(Avail + '/routes/getvisibleroutes');
+  return $resource('../dev/routes.json');
 })
 
 .factory('NearestStops', function($resource, Avail){
@@ -21,7 +24,8 @@ angular.module('pvta.services', ['ngResource'])
 })
 
 .factory('Stop', function ($resource, Avail) {
-    return $resource(Avail + '/stops/get/:stopId');
+    //return $resource(Avail + '/stops/get/:stopId');
+  return $resource('../dev/stops/:stopId.json')
 })
 
 .factory('Stops', function ($resource, Avail){
@@ -33,7 +37,8 @@ angular.module('pvta.services', ['ngResource'])
 })
 
 .factory('StopDeparture', function ($resource, Avail) {
-    return $resource(Avail + '/stopdepartures/get/:stopId');
+    //return $resource(Avail + '/stopdepartures/get/:stopId');
+  return $resource('../dev/stopdepartures/:stopId.json')
 })
 
 .factory('Messages', function ($resource, Avail) {

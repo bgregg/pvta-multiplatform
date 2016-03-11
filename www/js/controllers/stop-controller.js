@@ -3,6 +3,7 @@ angular.module('pvta.controllers').controller('StopController', function ($scope
   $scope.getDepartures = function () {
     var routes = [];
     var deps = StopDeparture.query({stopId: $stateParams.stopId}, function () {
+      console.log(JSON.stringify(deps));
       var directions = deps[0].RouteDirections;
       $scope.departures = [];
       for (var i = 0; i < directions.length; i++) {
