@@ -1,4 +1,4 @@
-angular.module('pvta.controllers').controller('MyBusesController', function ($scope, Messages, FavoriteRoutes, FavoriteStops) {
+angular.module('pvta.controllers').controller('MyBusesController', function ($scope, Messages, FavoriteRoutes, FavoriteStops, $cordovaSQLite) {
   $scope.$on('$ionicView.enter', function (e) {
     reload();
   });
@@ -28,4 +28,45 @@ angular.module('pvta.controllers').controller('MyBusesController', function ($sc
     FavoriteStops.remove(stop);
     $scope.stops.splice(currentIndex, 1);
   };
+  
+  document.addEventListener('deviceready', function(){
+  
+   
+    var db = $cordovaSQLite.openDB({name: "pvta", location: 2});
+    var query1 = "CREATE TABLE IF NOT EXISTS routes (id integer primary key, routeid integer, shortname text)";
+    $cordovaSQLite.execute(db, query1).then(function(res){
+      console.log(JSON.stringify(res));
+      q2(db);
+    }, function(err){
+      console.log(JSON.stringify(err));
+    });  
+  });
+  
+  
+  
+  function q2(db){
+    var query2 = "INSERT INTO routes (routeid, shortname) VALUES (?,?)";
+    $cordovaSQLite.execute(db, query2, [20031, "31"]).then(function(res){
+      console.log(JSON.stringify(res));
+      rows(db);
+    }, function(err){
+      console.log(JSON.stringify(err));
+    });  
+  }
+  
+  function rows(db){
+    var query3 = "SELECT routeid, shortname FROM routes";
+    $cordovaSQLite.execute(db, query3, []).then(function(res){
+      if(res.rows.length > 0) {
+        console.log(JSON.stringify(res.rows.item(2)));
+        console.log("SELECTED -> " + res.rows.item(0).routeid + " " + res.rows.item(0).shortname);
+      }
+      else {
+        console.log("No results found");
+      }
+    }, function(err){
+      console.error(err);
+    });
+  }
+
 });

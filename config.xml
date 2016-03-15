@@ -7,9 +7,9 @@
   <author email="transit-it@umass.edu" href="http://umass.edu/bus">
       UMass Transit
     </author>
-  <content src="index.html"/>
+  <content src="http://192.168.1.103:8100" original-src="index.html"/>
   <access origin="*"/>
-  <access origin="mailto:*" launch-external="yes" />
+  <access origin="mailto:*" launch-external="yes"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
