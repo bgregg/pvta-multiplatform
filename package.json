@@ -2,7 +2,9 @@
   "name": "PVTA",
   "version": "0.5.2",
   "description": "The best way to find your buses on the go.",
-  "dependencies": {},
+  "dependencies": {
+    "angular-papaparse": "^1.0.0"
+  },
   "devDependencies": {
     "bower": "^1.3.3",
     "gulp": "^3.9.0",
