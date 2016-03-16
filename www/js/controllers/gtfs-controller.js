@@ -1,11 +1,11 @@
-angular.module('pvta.controllers').controller('GtfsController', function($cordovaFile){
+angular.module('pvta.controllers').controller('GtfsController', function($scope, $cordovaFile, Papa){
   onLoad();
   function onLoad() {
     document.addEventListener("deviceready", openFile, false);
   }
   
   function openFile(){
-    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/google_transit/agency.txt", gotFile, fail);
+    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/google_transit/routes.txt", gotFile, fail);
   }
   
   function gotFile(fileEntry) {
@@ -14,7 +14,11 @@ angular.module('pvta.controllers').controller('GtfsController', function($cordov
         var reader = new FileReader();
 
         reader.onloadend = function(e) {
-            console.log("Text is: "+this.result);
+          Papa.parse(this.result, {
+            header: true,
+            complete: papaComplete
+          });
+            //console.log("Text is: "+this.result);
          //   document.querySelector("#textArea").innerHTML = this.result;
         }
 
@@ -27,6 +31,13 @@ angular.module('pvta.controllers').controller('GtfsController', function($cordov
     console.dir(e);
 }
   
+  function papaComplete(results){
+    $scope.routes = results.data;
+    _.each($scope.routes, function(route){
+      console.log(JSON.stringify(route));
+    })
+    
+  }
 
   // Cordova is ready
   function onDeviceReady() {

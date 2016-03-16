@@ -6,7 +6,7 @@
 // 'pvta.controllers' is found in controllers.js
 angular.module('pvta.controllers', ['pvta.services']);
 
-angular.module('pvta', ['ionic', 'ngCordova', 'pvta.controllers', 'angularMoment', 'jett.ionic.filter.bar', 'underscore'])
+angular.module('pvta', ['ionic', 'ngCordova', 'pvta.controllers', 'angularMoment', 'jett.ionic.filter.bar', 'underscore', 'ngPapaParse'])
 
 .run(function ($ionicPlatform) {
   $ionicPlatform.ready(function () {
@@ -168,7 +168,7 @@ angular.module('pvta', ['ionic', 'ngCordova', 'pvta.controllers', 'angularMoment
     url: '/gtfs',
     views: {
       'menuContent': {
-        templateUrl: 'templates/map.html',
+        templateUrl: 'templates/schedule.html',
         controller: 'GtfsController'
       }
     }
