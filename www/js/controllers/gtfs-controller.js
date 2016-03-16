@@ -1,5 +1,13 @@
 angular.module('pvta.controllers').controller('GtfsController', function($scope, $cordovaFile, Papa){
   onLoad();
+  
+  $scope.chosenRoute = {LongName: ""};
+  
+  $scope.poop = function(){
+    console.log('booty');
+    console.log(JSON.stringify($scope.chosenRoute));
+  }
+  
   function onLoad() {
     document.addEventListener("deviceready", openFile, false);
   }

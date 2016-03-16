@@ -1,10 +1,18 @@
-<ion-view view-title="Search">
+<ion-view view-title="PVTA Schedule">
   <ion-content>
-    <ion-list>
-      <ion-item ng-repeat="route in routes">
-        {{route.route_long_name}}
-      </ion-item>
-    </ion-list>
+    
+    <label class="item item-input item-select">
+    <div class="input-label">
+      Pick a Route
+    </div>
+    <select ng-model="chosenRoute.LongName">
+      <option ng-repeat="route in routes" value="{{route.route_long_name}}">{{route.route_short_name}}</option>
+    </select>
+  </label>
+    <p>
+    You're looking up stuff for route
+    </p>
+    <p>{{chosenRoute.LongName}}</p>
     
   </ion-content>
 </ion-view>
