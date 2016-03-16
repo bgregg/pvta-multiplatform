@@ -162,6 +162,16 @@ angular.module('pvta', ['ionic', 'ngCordova', 'pvta.controllers', 'angularMoment
         controller: 'VehicleMapController'
       }
     }
+  })
+  
+  .state('app.gtfs', {
+    url: '/gtfs',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/map.html',
+        controller: 'GtfsController'
+      }
+    }
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/my-buses');

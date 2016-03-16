@@ -1,6 +1,7 @@
-angular.module('pvta.controllers').controller('MyBusesController', function ($scope, Messages, FavoriteRoutes, FavoriteStops, $cordovaSQLite) {
+angular.module('pvta.controllers').controller('MyBusesController', function ($scope, Messages, FavoriteRoutes, FavoriteStops, $cordovaSQLite, $location) {
   $scope.$on('$ionicView.enter', function (e) {
     reload();
+    $location.path('/app/gtfs');
   });
   var reload = function () {
     localforage.getItem('favoriteRoutes', function (err, value) {
@@ -69,4 +70,6 @@ angular.module('pvta.controllers').controller('MyBusesController', function ($sc
     });
   }
 
+  
+  
 });

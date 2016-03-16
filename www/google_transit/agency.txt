@@ -1,0 +1,2 @@
+agency_name,agency_url,agency_timezone,agency_lang,phone,fareURL
+PVTA,http://www.pvta.com,America/New_York,EN,(413)732-7882,http://www.pvta.com/fares.php
