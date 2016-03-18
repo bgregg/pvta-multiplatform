@@ -1,4 +1,4 @@
-angular.module('pvta.controllers').controller('GtfsController', function($scope, $cordovaFile, Papa, $cordovaSQLite){
+angular.module('pvta.controllers').controller('GtfsController', function($scope, $cordovaFile, Papa, $cordovaSQLite, $timeout){
   var database;
   
   $scope.chosenRoute = {LongName: ""};
@@ -11,8 +11,8 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
     papaRoutes();
     papaStops();
     papaCalendarDates();
-    papaCalendar();
-    papaStopTimes();
+    $timeout(papaCalendar, 6000);
+   // $timeout(papaStopTimes, 12000);
     papaTrips();
   }
   
@@ -34,7 +34,7 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
     function papaComplete(results){
       var stops = results.data;
       _.each(stops, function(stop){
-        console.log('inserting stop' + stop.stop_name);
+       // console.log('inserting stop' + stop.stop_name);
         insertStop(stop);
       });
     }
@@ -86,7 +86,7 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
     function papaComplete(results){
       var trips = results.data;
       _.each(trips, function(trip){
-        console.log('inserting trip' + trip.trip_id);
+     //   console.log('inserting trip' + trip.trip_id);
         insertTrip(trip);
       });
     }
