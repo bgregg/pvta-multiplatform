@@ -31,20 +31,21 @@ angular.module('pvta.controllers').controller('MyBusesController', function ($sc
   };
   
   document.addEventListener('deviceready', function(){
-  
+    $cordovaSQLite.deleteDB({name: "pvta", location: 2});
    
-    var db = $cordovaSQLite.openDB({name: "pvta", location: 2});
-    var query1 = "CREATE TABLE IF NOT EXISTS routes (id integer primary key, routeid integer, shortname text)";
-    $cordovaSQLite.execute(db, query1).then(function(res){
-      console.log(JSON.stringify(res));
-      q2(db);
-    }, function(err){
-      console.log(JSON.stringify(err));
-    });  
+    //var db = $cordovaSQLite.openDB({name: "pvta", location: 2});
+    
+   // var query1 = "CREATE TABLE IF NOT EXISTS routes (id integer primary key, routeid integer, shortname text)";
+   // $cordovaSQLite.execute(db, query1).then(function(res){
+   //   console.log(JSON.stringify(res));
+   //   q2(db);
+  //  }, function(err){
+  //    console.log(JSON.stringify(err));
+  //  });  
   });
   
   
-  
+  /*
   function q2(db){
     var query2 = "INSERT INTO routes (routeid, shortname) VALUES (?,?)";
     $cordovaSQLite.execute(db, query2, [20031, "31"]).then(function(res){
@@ -69,7 +70,5 @@ angular.module('pvta.controllers').controller('MyBusesController', function ($sc
       console.error(err);
     });
   }
-
-  
-  
+  */
 });

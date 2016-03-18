@@ -1,5 +1,6 @@
-angular.module('pvta.controllers').controller('GtfsController', function($scope, $cordovaFile, Papa){
+angular.module('pvta.controllers').controller('GtfsController', function($scope, $cordovaFile, Papa, $cordovaSQLite){
   onLoad();
+  var routesFromGTFS = [];
   
   $scope.chosenRoute = {LongName: ""};
   
@@ -9,11 +10,14 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   }
   
   function onLoad() {
-    document.addEventListener("deviceready", openFile, false);
+    document.addEventListener("deviceready", function(){
+      openGTFS('routes.txt');
+     // openGTFS('stops.txt');
+    }, false);
   }
   
-  function openFile(){
-    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/google_transit/routes.txt", gotFile, fail);
+  function openGTFS(filename){
+    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/google_transit/"+ filename, gotFile, fail);
   }
   
   function gotFile(fileEntry) {
@@ -42,8 +46,8 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   function papaComplete(results){
     $scope.routes = results.data;
     _.each($scope.routes, function(route){
-      console.log(JSON.stringify(route));
-    })
+     routesFromGTFS.push(route);
+    });
     
   }
 
@@ -71,4 +75,61 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   function dirFail(error) {
     console.log("Failed to list directory contents: " + error.code);
   }
+  
+  document.addEventListener('deviceready', function(){
+    var db = $cordovaSQLite.openDB({name: "pvta", location: 2});
+    makeRoutesTable(db);
+  });
+  
+  function makeRoutesTable(db){
+    var query = "CREATE TABLE IF NOT EXISTS routes (route_id integer primary key, route_short_name text, route_long_name text, route_type integer)";
+    $cordovaSQLite.execute(db, query).then(function(res){
+     // console.log(JSON.stringify(res));
+      insertRoutes(db);
+      makeStopsTable(db);
+    }, function(err){
+      console.log(JSON.stringify(err));
+    });
+  }
+  function makeStopsTable(db){
+    var query = "CREATE TABLE IF NOT EXISTS stops (stop_id integer primary key, stop_name text, stop_lon real, stop_lat real)"
+    $cordovaSQLite.execute(db, query).then(function(res){
+      //console.log(JSON.stringify(res));
+      printAll(db);
+    }, function(err){
+      console.log(JSON.stringify(err));
+    });
+  }
+  function printAll(db){
+    $cordovaSQLite.execute(db, "SELECT * FROM routes", []).then(function(res){
+      console.log(JSON.stringify(res.rows.item.length));
+      if(res.rows.item.length > 0) {
+        console.log(JSON.stringify(res.rows.item[0]));
+        _.each(res.rows.item, function(route){
+          console.log(JSON.stringify(route));
+        })
+      }
+    }, function(err){
+      console.log(JSON.stringify(err));
+    });
+    $cordovaSQLite.execute(db, "SELECT * FROM stops", []).then(function(res){
+      console.log(JSON.stringify(res));
+    }, function(err){
+      console.log(JSON.stringify(err));
+    });
+  }
+  
+  function insertRoutes(db){
+    var query = "INSERT INTO routes (route_id, route_short_name, route_long_name, route_type) VALUES (?,?,?,?)"
+    if(routesFromGTFS.length > 0){
+     // console.log('insert routes here, list exsits yay');
+      _.each(routesFromGTFS, function(route){
+       // console.log(route.route_id);
+        $cordovaSQLite.execute(db, query, [route.route_id, route.route_short_name, route.route_long_name, route.route_type]).then(function(res){
+         // console.log(JSON.stringify(res));
+        });
+      })
+    }
+  }
+  
 });
