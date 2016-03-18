@@ -10,6 +10,10 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   function insertAll(){
     papaRoutes();
     papaStops();
+    papaCalendarDates();
+    papaCalendar();
+    papaStopTimes();
+    papaTrips();
   }
   
   function papaRoutes(){
@@ -35,6 +39,58 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
       });
     }
     openGTFS('stops.txt', function(fileEntry){
+      gotFile(fileEntry, papaComplete);
+    });
+  }
+  
+  function papaCalendarDates(){
+    function papaComplete(results){
+      var dates = results.data;
+      _.each(dates, function(date){
+        console.log('inserting calendardate for' + date.date);
+        insertCalendarDate(date);
+      });
+    }
+    openGTFS('calendar_dates.txt', function(fileEntry){
+      gotFile(fileEntry, papaComplete);
+    });
+  }
+  
+  function papaCalendar(){
+    function papaComplete(results){
+      var calendars = results.data;
+      _.each(calendars, function(calendar){
+        console.log('inserting calendar');
+        insertCalendar(calendar);
+      });
+    }
+    openGTFS('calendar.txt', function(fileEntry){
+      gotFile(fileEntry, papaComplete);
+    });
+  }
+  
+  function papaStopTimes(){
+    function papaComplete(results){
+      var stopTimes = results.data;
+      _.each(stopTimes, function(time){
+        console.log('inserting stop time');
+        insertStopTime(time);
+      });
+    }
+    openGTFS('stop_times.txt', function(fileEntry){
+      gotFile(fileEntry, papaComplete);
+    });
+  }
+  
+  function papaTrips(){
+    function papaComplete(results){
+      var trips = results.data;
+      _.each(trips, function(trip){
+        console.log('inserting trip' + trip.trip_id);
+        insertTrip(trip);
+      });
+    }
+    openGTFS('trips.txt', function(fileEntry){
       gotFile(fileEntry, papaComplete);
     });
   }
@@ -136,14 +192,33 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
       console.log(JSON.stringify(err));
     });
   }
-  
-  function getAStop(){
-    var query = "SELECT stop_name FROM stops WHERE stop_id = 95";
-    $cordovaSQLite.execute(database, query, []).then(function(res){
-      if(res.rows.length > 0){
-        console.log(JSON.stringify(res.rows.item(0)));
-      }
-    }, function(err){});
+  function insertCalendarDate(calendarDate){
+    var query = "INSERT INTO calendar_dates (service_id, date, exception_type) VALUES (?,?,?)"
+    $cordovaSQLite.execute(database, query, [calendarDate.service_id, calendarDate.date, calendarDate.exception_type]).then(function(res){
+    },function(err){
+      console.log(JSON.stringify(err));
+    });
+  }
+  function insertCalendar(calendar){
+    var query = "INSERT INTO calendar (service_id, monday, tuesday, wednesday, thursday, friday, saturday, sunday, start_date, end_date) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    $cordovaSQLite.execute(database, query, [calendar.service_id, calendar.monday, calendar.tuesday, calendar.wednesday, calendar.thursday, calendar.friday, calendar.saturday, calendar.sunday, calendar.start_date, calendar.end_date]).then(function(res){
+    },function(err){
+      console.log(JSON.stringify(err));
+    });
+  }
+  function insertStopTime(stopTime){
+    var query = "INSERT INTO stop_times (trip_id, arrival_time, departure_time, stop_id, stop_sequence, pickup_type, drop_off_type) VALUES (?,?,?,?,?,?,?)";
+    $cordovaSQLite.execute(database, query, [stopTime.trip_id, stopTime.arrival_time, stopTime.departure_time, stopTime.stop_id, stopTime.stop_sequence, stopTime.pickup_type, stopTime.drop_off_type]).then(function(res){
+    },function(err){
+      console.log(JSON.stringify(err));
+    });
+  }
+  function insertTrip(trip){
+    var query = "INSERT INTO trips (route_id, service_id, trip_id, trip_headsign, block_id, shape_id) VALUES (?,?,?,?,?,?)";
+    $cordovaSQLite.execute(database, query, [trip.route_id, trip.service_id, trip.trip_id, trip.trip_headsign, trip.block_id, trip.shape_id]).then(function(res){
+    },function(err){
+      console.log(JSON.stringify(err));
+    });
   }
   
 });
