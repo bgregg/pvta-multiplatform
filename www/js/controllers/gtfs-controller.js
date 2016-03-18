@@ -122,25 +122,7 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
     });
   }
   
-  /*function printAll(db){
-    $cordovaSQLite.execute(db, "SELECT * FROM routes", []).then(function(res){
-      console.log(JSON.stringify(res.rows.item.length));
-      if(res.rows.item.length > 0) {
-        console.log(JSON.stringify(res.rows.item[0]));
-        _.each(res.rows.item, function(route){
-          console.log(JSON.stringify(route));
-        })
-      }
-    }, function(err){
-      console.log(JSON.stringify(err));
-    });
-    $cordovaSQLite.execute(db, "SELECT * FROM stops", []).then(function(res){
-      console.log(JSON.stringify(res));
-    }, function(err){
-      console.log(JSON.stringify(err));
-    });
-  }
-  */
+  
   function insertRoute(route){
     var query = "INSERT INTO routes (route_id, route_short_name, route_long_name, route_type) VALUES (?,?,?,?)"
     console.log(JSON.stringify(route));
