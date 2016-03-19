@@ -70,16 +70,14 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   }
   
   function papaStopTimes(){
-    function papaComplete(results){
-      var stopTimes = results.data;
-      _.each(stopTimes, function(time){
-        console.log('inserting stop time');
-      //  insertStopTime(time);
-      });
-    }
-    openGTFS('stop_times.txt', function(fileEntry){
-      gotFile(fileEntry, papaComplete);
-    });
+    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/google_transit/stop_times.txt", function(fileEntry){
+    Papa.parse(this.result, {
+          header: true,
+          step: function(results, parser){
+           console.log(JSON.stringify(results.data));
+          }
+        });
+    }, fail);
   }
   
   function papaTrips(){
@@ -106,18 +104,24 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
       var beg = 0;
       var mid = file.size / 2;
       var end = file.size-1;
-      var firstHalf = file.slice(beg, mid);
-      var secondHalf = file.slice(mid+1, end);
+    //  var firstHalf = file.slice(beg, mid);
+     // var secondHalf = file.slice(mid+1, end);
       var reader = new FileReader();
-      var reader2 = new FileReader();
-    //  reader.readAsText(firstHalf);
-      reader2.readAsText(secondHalf);
+     // var reader2 = new FileReader();
+      reader.readAsText(file);
+    //  reader2.readAsText(secondHalf);
       reader.onloadend = function(e) {
         Papa.parse(this.result, {
           header: true,
           complete: cb
         });
       }
+     /* reader2.onloadend = function(e) {
+        Papa.parse(this.result, {
+          header: false,
+          complete: cb
+        });
+      }*/
     });
 
 }
