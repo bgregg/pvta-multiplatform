@@ -12,7 +12,7 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
     papaStops();
     papaCalendarDates();
     $timeout(papaCalendar, 6000);
-   // $timeout(papaStopTimes, 12000);
+    $timeout(papaStopTimes, 12000);
     papaTrips();
   }
   
@@ -74,7 +74,7 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
       var stopTimes = results.data;
       _.each(stopTimes, function(time){
         console.log('inserting stop time');
-        insertStopTime(time);
+      //  insertStopTime(time);
       });
     }
     openGTFS('stop_times.txt', function(fileEntry){
@@ -103,16 +103,21 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   function gotFile(fileEntry, cb) {
 
     fileEntry.file(function(file) {
-        var reader = new FileReader();
-
-        reader.onloadend = function(e) {
-          Papa.parse(this.result, {
-            header: true,
-            complete: cb
-          });
-        }
-
-        reader.readAsText(file);
+      var beg = 0;
+      var mid = file.size / 2;
+      var end = file.size-1;
+      var firstHalf = file.slice(beg, mid);
+      var secondHalf = file.slice(mid+1, end);
+      var reader = new FileReader();
+      var reader2 = new FileReader();
+    //  reader.readAsText(firstHalf);
+      reader2.readAsText(secondHalf);
+      reader.onloadend = function(e) {
+        Papa.parse(this.result, {
+          header: true,
+          complete: cb
+        });
+      }
     });
 
 }
