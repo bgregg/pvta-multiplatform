@@ -11,8 +11,8 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
     papaRoutes();
     papaStops();
     papaCalendarDates();
-    $timeout(papaCalendar, 6000);
-    $timeout(papaStopTimes, 12000);
+    papaCalendar();
+    papaStopTimes();
     papaTrips();
   }
   
@@ -70,21 +70,56 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   }
   
   function papaStopTimes(){
+    function papaComplete(results){
+      console.log('STOPTIME PAPACOMPLETE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      var stopTimes = results.data;
+      _.each(stopTimes, function(time){
+        console.log('inserting stopTime');
+        insertStopTime(time);
+      });
+    }
     window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/google_transit/stop_times.txt", function(fileEntry){
-    Papa.parse(this.result, {
+    console.log('WELCOME TO THE JUNGLE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    fileEntry.file(function(file) {
+      var beg = 0;
+      var mid = file.size / 2;
+      var end = file.size-1;
+      var firstHalf = file.slice(beg, mid);
+      console.log(firstHalf.size);
+      var reader = new FileReader();
+      reader.readAsText(file);
+      reader.onloadend = function(e) {
+        Papa.parse(this.result, {
           header: true,
           step: function(results, parser){
-           console.log(JSON.stringify(results.data));
-          }
+            insertStopTime(results.data[0]);
+          },
+          complete: "secondReader"
         });
+      }
+      function secondReader (results){ 
+        papaComplete(results);
+        var secondHalf = file.slice(mid+1, end);
+        var reader2 = new FileReader();
+        reader2.readAsText(secondHalf);
+        reader2.onloadend = function(e) {
+          Papa.parse(this.result, {
+            header: false,
+            complete: papaComplete
+          });
+         secondHalf.close() 
+        }
+      }
+      
+    })
     }, fail);
   }
   
   function papaTrips(){
     function papaComplete(results){
+      console.log('doing trips');
       var trips = results.data;
       _.each(trips, function(trip){
-     //   console.log('inserting trip' + trip.trip_id);
         insertTrip(trip);
       });
     }
@@ -101,27 +136,18 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   function gotFile(fileEntry, cb) {
 
     fileEntry.file(function(file) {
-      var beg = 0;
-      var mid = file.size / 2;
-      var end = file.size-1;
-    //  var firstHalf = file.slice(beg, mid);
-     // var secondHalf = file.slice(mid+1, end);
+    
       var reader = new FileReader();
-     // var reader2 = new FileReader();
+    
       reader.readAsText(file);
-    //  reader2.readAsText(secondHalf);
+    
       reader.onloadend = function(e) {
         Papa.parse(this.result, {
           header: true,
           complete: cb
         });
       }
-     /* reader2.onloadend = function(e) {
-        Papa.parse(this.result, {
-          header: false,
-          complete: cb
-        });
-      }*/
+     
     });
 
 }
@@ -152,7 +178,7 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   }
   
   function makeCalendarDatesTable(){
-    var query = "CREATE TABLE IF NOT EXISTS calendar_dates (service_id text primary key, date text, exception_type integer)"
+    var query = "CREATE TABLE IF NOT EXISTS calendar_dates (service_id text, date text, exception_type integer)"
     $cordovaSQLite.execute(database, query).then(function(res){
       makeCalendarTable();
     }, function(err){
@@ -161,7 +187,7 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   }
   
   function makeCalendarTable(){
-    var query = "CREATE TABLE IF NOT EXISTS calendar (service_id text primary key, monday integer, tuesday integer, wednesday integer, thursday integer, friday integer, saturday integer, sunday integer, start_date text, end_date text)"
+    var query = "CREATE TABLE IF NOT EXISTS calendar (service_id text, monday integer, tuesday integer, wednesday integer, thursday integer, friday integer, saturday integer, sunday integer, start_date text, end_date text)"
     $cordovaSQLite.execute(database, query).then(function(res){
       makeStopTimesTable();
     }, function(err){
@@ -170,7 +196,7 @@ angular.module('pvta.controllers').controller('GtfsController', function($scope,
   }
   
   function makeStopTimesTable(){
-    var query = "CREATE TABLE IF NOT EXISTS stop_times (trip_id text, arrival_time text, departure_time text, stop_id integer primary key, stop_sequence integer, pickup_type integer, drop_off_type integer)"
+    var query = "CREATE TABLE IF NOT EXISTS stop_times (trip_id text, arrival_time text, departure_time text, stop_id integer, stop_sequence integer, pickup_type integer, drop_off_type integer)"
     $cordovaSQLite.execute(database, query).then(function(res){
       makeTripsTable();
     }, function(err){
