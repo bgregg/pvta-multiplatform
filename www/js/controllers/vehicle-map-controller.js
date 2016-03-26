@@ -13,6 +13,7 @@ angular.module('pvta.controllers').controller('VehicleMapController', function (
 
   function placeVehicle () {
     var vehicle = LatLong.getAll();
+    console.log(JSON.stringify(vehicle));
     var loc = new google.maps.LatLng(vehicle[0].lat, vehicle[0].long);
     Map.addMapListener(Map.placeDesiredMarker(loc, 'http://www.google.com/mapfiles/kml/paddle/go.png'), 'Here is your vehicle!');
   }
