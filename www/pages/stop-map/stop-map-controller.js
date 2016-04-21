@@ -8,8 +8,9 @@ angular.module('pvta.controllers').controller('StopMapController', function ($sc
     //This may have to change if we end up deploying this to
     //the entire PVTA ridership
     center: new google.maps.LatLng(42.386270, -72.525844),
-    zoom: 15,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    zoom: 13,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    disableDefaultUI: true
   };
 
   $scope.map = new google.maps.Map(document.getElementById('stop-map'), mapOptions);

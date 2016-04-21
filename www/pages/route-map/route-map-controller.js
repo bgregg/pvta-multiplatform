@@ -3,8 +3,9 @@ angular.module('pvta.controllers').controller('RouteMapController', function ($s
 
   var mapOptions = {
     center: new google.maps.LatLng(42.386270, -72.525844),
-    zoom: 15,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    zoom: 13,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    disableDefaultUI: true
   };
 
   $scope.map = new google.maps.Map(document.getElementById('map'), mapOptions);
