@@ -13,6 +13,30 @@ angular.module('pvta.controllers').controller('StopMapController', function ($sc
     disableDefaultUI: true
   };
 
+  function DirectionsControl(directionsDiv, map){
+    var directionsUI = document.createElement('div');
+    directionsUI.style.backgroundColor = '#387ef5';
+    directionsUI.style.border = '2px solid blue';
+    directionsUI.style.borderRadius = '3px';
+    directionsUI.style.cursor = 'pointer';
+    directionsUI.style.textAlign = 'center';
+    directions.title = 'Click to get directions to this stop';
+    directionsDiv.appendChild(directionsUI);
+
+    var text = document.createElement('div');
+    text.style.color = 'white';
+    text.style.fontSize = '16px';
+    text.innerHTML = 'Get Directions';
+    directionsUI.appendChild(text);
+
+    directionsUI.addEventListener('click', function(){
+      $ionicLoading.show({});
+      document.getElementById('stop-map').style.height = '50%';
+      directionsDisplay.setPanel(document.getElementById('directions'));
+      calculateDirections();
+    });
+  }
+
   $scope.map = new google.maps.Map(document.getElementById('stop-map'), mapOptions);
   Map.init($scope.map, bounds);
 
@@ -45,9 +69,14 @@ angular.module('pvta.controllers').controller('StopMapController', function ($sc
     $ionicLoading.show({});
     directionsDisplay = new google.maps.DirectionsRenderer();
     directionsDisplay.setMap($scope.map);
-    directionsDisplay.setPanel(document.getElementById('directions'));
+    var directionsControlDiv = document.createElement('div');
+    var directionsControl = new DirectionsControl(directionsControlDiv, $scope.map);
+
+    directionsControlDiv.index = 1;
+    $scope.map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(directionsControlDiv);
+    $ionicLoading.hide();
     $scope.stop = Stop.get({stopId: $stateParams.stopId}, function () {
-      calculateDirections();
+      placeStop();
     });
   });
 
