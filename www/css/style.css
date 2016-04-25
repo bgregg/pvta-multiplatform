@@ -69,6 +69,7 @@ border: none;
 /* Empty. Add your own CSS if you like */
 #stop-map {
   height: 100%;
+  transition: height 1s;
 }
 
 #directions {
